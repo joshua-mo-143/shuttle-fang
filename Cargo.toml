@@ -1,0 +1,9 @@
+[package]
+name = "shuttle-fang"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+async-trait = "0.1.68"
+fang = "0.10.3"
+shuttle-service = { version = "0.20.0", default-features = false }
