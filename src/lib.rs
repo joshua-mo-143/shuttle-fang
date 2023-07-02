@@ -6,8 +6,6 @@ use shuttle_service::{
 };
 use fang::{NoTls, AsyncQueue};
 
-const MAX_POOL_SIZE: u32 = 5;
-
 #[derive(Default, Serialize)]
 pub struct Postgres {
     #[serde(flatten)]
@@ -63,10 +61,12 @@ impl ResourceBuilder<AsyncQueue<NoTls>> for Postgres {
     }
 
     async fn build(db_output: &Self::Output) -> Result<AsyncQueue<NoTls>, shuttle_service::Error> {
-    let mut queue = AsyncQueue::builder().uri(db_output).max_pool_size(1u32).build();
+    let conn_string = get_connection_string(db_output);
+        
+    let mut queue = AsyncQueue::builder().uri(conn_string).max_pool_size(1u32).build();
 
-    queue.connect(NoTls).await.map_err(|err| shuttle_service::Error::Custom(err.into()));
+    let _ = queue.connect(NoTls).await.map_err(|err| shuttle_service::Error::Custom(err.into()));
 
-    queue
+    Ok(queue)
     }
 }
