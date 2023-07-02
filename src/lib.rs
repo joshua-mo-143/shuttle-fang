@@ -4,7 +4,7 @@ use shuttle_service::{
     database::{SharedEngine, Type as DatabaseType},
     DbInput, DbOutput, Factory, ResourceBuilder, Type,
 };
-use fang::AsyncQueue;
+use fang::{NoTls, AsyncQueue};
 
 const MAX_POOL_SIZE: u32 = 5;
 
@@ -32,7 +32,7 @@ fn get_connection_string(db_output: &DbOutput) -> String {
 }
 
 #[async_trait]
-impl ResourceBuilder<AsyncQueue> for Postgres {
+impl ResourceBuilder<AsyncQueue<NoTls>> for Postgres {
     const TYPE: Type = Type::Database(DatabaseType::Shared(SharedEngine::Postgres));
 
     type Config = Self;
@@ -62,11 +62,11 @@ impl ResourceBuilder<AsyncQueue> for Postgres {
         Ok(db_output)
     }
 
-    async fn build(db_output: &Self::Output) -> Result<DatabaseConnection, shuttle_service::Error> {
+    async fn build(db_output: &Self::Output) -> Result<AsyncQueue<NoTls>>, shuttle_service::Error> {
     let mut queue = AsyncQueue::builder().uri(db_output).max_pool_size(1u32).build();
 
-    queue.connect(NoTls).await.map_err(|err| shuttle_service::Error::Custom(err.into()))
+    queue.connect(NoTls).await.map_err(|err| shuttle_service::Error::Custom(err.into()));
+
+    queue
     }
 }
-
-type AsyncQueue = AsyncQueue<NoTls>
