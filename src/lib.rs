@@ -63,7 +63,7 @@ impl ResourceBuilder<AsyncQueue<NoTls>> for Postgres {
     async fn build(db_output: &Self::Output) -> Result<AsyncQueue<NoTls>, shuttle_service::Error> {
     let conn_string = get_connection_string(db_output);
         
-    let mut queue = AsyncQueue::builder().uri(conn_string).max_pool_size(1u32).build();
+    let mut queue = AsyncQueue::builder().uri(conn_string).max_pool_size(5u32).build();
 
     let _ = queue.connect(NoTls).await.map_err(|err| shuttle_service::Error::Custom(err.into()));
 

@@ -7,4 +7,4 @@ edition = "2021"
 async-trait = "0.1.68"
 fang = "0.10.3"
 serde = { version = "1.0.164", features = ["derive"] }
-shuttle-service = { version = "0.20.0", default-features = false }
+shuttle-service = { version = "0.30.0", default-features = false }

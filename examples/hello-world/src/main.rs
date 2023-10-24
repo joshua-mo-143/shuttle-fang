@@ -1,9 +1,9 @@
 use axum::{routing::get, Router};
-use sea_orm::DatabaseConnection;
+use fang::{NoTls, AsyncQueue};
 
 #[derive(Clone)]
 struct AppState {
-    pool: DatabaseConnection,
+    pool: AsyncQueue<NoTls>,
 }
 
 async fn hello_world() -> &'static str {
@@ -11,7 +11,7 @@ async fn hello_world() -> &'static str {
 }
 
 #[shuttle_runtime::main]
-async fn axum(#[shuttle_seaorm::Postgres] pool: DatabaseConnection) -> shuttle_axum::ShuttleAxum {
+async fn axum(#[shuttle_fang::Postgres] pool: AsyncQueue<NoTls>) -> shuttle_axum::ShuttleAxum {
     let state = AppState { pool };
     let router = Router::new().route("/", get(hello_world)).with_state(state);
 

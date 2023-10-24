@@ -5,9 +5,9 @@ edition = "2021"
 
 [dependencies]
 axum = "0.6.18"
-sea-orm = { version = "0.11.3", features = ["runtime-tokio-native-tls", "sqlx-postgres"] }
-shuttle-axum = "0.20.0"
-shuttle-runtime = "0.20.0"
-shuttle-shared-db = "0.20.0"
+shuttle-axum = "0.30.0"
+shuttle-runtime = "0.30.0"
+shuttle-shared-db = "0.30.0"
 tokio = "1.28.2"
-shuttle-seaorm = {git = "https://github.com/joshua-mo-143/shuttle-seaorm.git"}
+shuttle-fang = { path = "../.." }
+fang = "0.10.4"
