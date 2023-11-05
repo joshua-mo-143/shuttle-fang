@@ -6,9 +6,8 @@ use shuttle_service::{
 };
 use fang::{NoTls, AsyncQueue};
 
-#[derive(Default, Serialize)]
+#[derive(Serialize)]
 pub struct Postgres {
-    #[serde(flatten)]
     db_input: DbInput,
 }
 
@@ -37,11 +36,13 @@ impl ResourceBuilder<AsyncQueue<NoTls>> for Postgres {
     type Output = DbOutput;
 
     fn new() -> Self {
-        Self::default()
+	Self {
+		config: Default::default()
+	}
     }
 
     fn config(&self) -> &Self::Config {
-        self
+        &self.config
     }
 
     async fn output(

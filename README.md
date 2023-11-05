@@ -8,7 +8,7 @@ See the example.
 
 ## License
 
-`shuttle-seaorm` is licensed under the [MIT license](http://opensource.org/licenses/MIT).
+`shuttle-fang` is licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
 ### Contribution
 
