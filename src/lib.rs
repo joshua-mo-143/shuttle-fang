@@ -8,17 +8,15 @@ use fang::{NoTls, AsyncQueue};
 
 #[derive(Serialize)]
 pub struct Postgres {
-    db_input: DbInput,
+    config: DbInput,
 }
 
 impl Postgres {
-    pub fn local_uri(self, local_uri: impl ToString) -> Self {
-        Self {
-            db_input: DbInput {
-                local_uri: Some(local_uri.to_string()),
-            },
+    pub fn local_uri(mut self, local_uri: impl ToString) -> Self {
+		self.config.local_uri = Some(local_uri.to_string());
+
+		self
         }
-    }
 }
 
 fn get_connection_string(db_output: &DbOutput) -> String {
@@ -32,7 +30,7 @@ fn get_connection_string(db_output: &DbOutput) -> String {
 impl ResourceBuilder<AsyncQueue<NoTls>> for Postgres {
     const TYPE: Type = Type::Database(DatabaseType::Shared(SharedEngine::Postgres));
 
-    type Config = Self;
+    type Config = DbInput;
     type Output = DbOutput;
 
     fn new() -> Self {
@@ -49,7 +47,7 @@ impl ResourceBuilder<AsyncQueue<NoTls>> for Postgres {
         self,
         factory: &mut dyn Factory,
     ) -> Result<Self::Output, shuttle_service::Error> {
-        let db_output = if let Some(local_uri) = self.db_input.local_uri {
+        let db_output = if let Some(local_uri) = self.config.local_uri {
             DbOutput::Local(local_uri)
         } else {
             let conn_data = factory
